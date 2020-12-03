@@ -5,37 +5,25 @@
 #include<stdio.h>
 #include<string.h>
 #include<errno.h>
+#include<limits.h>
 
 #include "Brainfuck.h"
 
 cell memory[256];
-
-void handle_error(const char* message, errno_t error)
-{
-	char error_message[256];
-	errno_t err = strerror_s(error_message, 255, error);
-
-	if (err != 0)
-	{
-		exit(err);
-	}
-
-	printf("%s: %s.\n", message, error_message);
-	exit(err);
-}
+char* ip;
+cell* ptr;
 
 char* read_file(char* file_path)
 {
-	FILE* file;
+	FILE* file = fopen(file_path, "r");
 
-	errno_t err = fopen_s(&file, file_path, "r");
-
-	if (err != 0 || file == NULL)
+	if (file == NULL)
 	{
-		handle_error("Couldn't open file", err);
-		exit(err);
+		int error = errno;
+		printf("Couldn't open file '%s': %s.\n", file_path, strerror(error));
+		exit(error);
 	}
-
+	
 	fseek(file, 0L, SEEK_END);
 	long file_size = ftell(file);
 
@@ -44,7 +32,11 @@ char* read_file(char* file_path)
 	char* buffer = calloc(file_size + 1, sizeof(char));
 
 	if (buffer == NULL)
-		handle_error("Can't load file", ENOMEM);
+	{
+		int error = errno;
+		printf("%s.\n", strerror(error));
+		exit(error);
+	}
 
 	fread(buffer, sizeof(char), file_size, file);
 
@@ -52,9 +44,6 @@ char* read_file(char* file_path)
 
 	return buffer;
 }
-
-char* ip;
-cell* ptr;
 
 char* interpret()
 {
