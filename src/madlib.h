@@ -9,7 +9,7 @@
 void register_library();
 
 // Print cell to standard output
-void put(cell input);
+void put(machine_state *state);
 
 // Get one cell from standard input
-cell get();
+void get(machine_state *state);

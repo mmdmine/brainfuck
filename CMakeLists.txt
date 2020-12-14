@@ -13,4 +13,6 @@ add_executable (
         "src/parser.c"
         "src/parser.h"
         "src/madlib.c"
-        "src/madlib.h")
+        "src/madlib.h"
+        "src/dictionary.c"
+        "src/dictionary.h")

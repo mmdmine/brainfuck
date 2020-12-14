@@ -7,13 +7,36 @@
 #include<limits.h>
 
 #include "vm.h"
-#include "madlib.h"
+#include "dictionary.h"
 
 cell memory[256];
 
 char* ip;
 
 machine_state state;
+dictionary functions_registry;
+
+void vm_init() {
+    state.memory_pointer = memory;
+    functions_registry = dictionary_new(8); // TODO: use 8 for now
+}
+
+void vm_free() {
+    dictionary_free(functions_registry);
+}
+
+void register_function(const char *function_name, void *function_address) {
+    dictionary_add(functions_registry, function_name, function_address);
+}
+
+void call_function(char *function_name) {
+    void (*func)(machine_state*) = dictionary_lookup(functions_registry, function_name);
+    if (func == NULL) {
+        // TODO: error
+        return;
+    }
+    (*func)(&state);
+}
 
 char* interpret()
 {
@@ -68,10 +91,10 @@ char* interpret()
                 }
                 break;
             case '.':
-                put(*(state.memory_pointer));
+                call_function("put");
                 break;
             case ',':
-                *(state.memory_pointer) = get();
+                call_function("get");
                 break;
             case '[':
                 ip++;
@@ -104,6 +127,5 @@ char* interpret()
 
 void run(program program) {
     ip = program.raw;
-    state.memory_pointer = memory;
     interpret();
 }

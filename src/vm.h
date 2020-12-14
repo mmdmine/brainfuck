@@ -14,6 +14,11 @@ typedef struct {
     cell *memory_pointer;
 } machine_state;
 
+// Initialize Virtual Machine
+void vm_init();
+// Free resources used by Virtual Machine
+void vm_free();
+
 // Run a program
 void run(program program);
 

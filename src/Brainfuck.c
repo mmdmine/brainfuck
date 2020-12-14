@@ -9,6 +9,7 @@
 #include "Brainfuck.h"
 #include "vm.h"
 #include "parser.h"
+#include "madlib.h"
 
 char* read_file(char* file_path)
 {
@@ -46,10 +47,17 @@ int main(const int argc, char** args)
 {
 	if (argc > 1)
 	{
+	    vm_init();
+	    register_library();
+
 		char* input = read_file(args[1]);
 		program input_program = parse(input);
+
 		run(input_program);
+
 		free(input);
+		vm_free();
+
 		return 0;
 	}
 
