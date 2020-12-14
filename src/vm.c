@@ -7,8 +7,7 @@
 #include<limits.h>
 
 #include "vm.h"
-
-typedef unsigned char cell;
+#include "madlib.h"
 
 cell memory[256];
 char* ip;
@@ -67,10 +66,10 @@ char* interpret()
                 }
                 break;
             case '.':
-                putc(*ptr, stdout);
+                put(*ptr);
                 break;
             case ',':
-                *ptr = (cell)getc(stdin);
+                *ptr = get();
                 break;
             case '[':
                 ip++;

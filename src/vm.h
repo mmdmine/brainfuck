@@ -4,8 +4,14 @@
 
 #pragma once
 
+typedef unsigned char cell;
+
 typedef struct {
     char *raw;
 } program;
 
+// Run a program
 void run(program program);
+
+// Register a function
+void register_function(const char *function_name, void *function_address);

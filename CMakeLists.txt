@@ -2,10 +2,15 @@
 
 project ("Brainfuck")
 
-add_executable (madbf
+add_executable (
+        madbf
         "src/Brainfuck.c"
         "src/Brainfuck.h"
         "src/vm.c"
         "src/vm.h"
+        "src/madlib.c"
+        "src/madlib.h"
         "src/parser.c"
-        "src/parser.h")
+        "src/parser.h"
+        "src/madlib.c"
+        "src/madlib.h")
