@@ -15,4 +15,6 @@ add_executable (
         "src/madlib.c"
         "src/madlib.h"
         "src/dictionary.c"
-        "src/dictionary.h")
+        "src/dictionary.h"
+        "src/token.h"
+        "src/token.c")
