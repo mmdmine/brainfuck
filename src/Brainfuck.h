@@ -2,5 +2,3 @@
 // Copyright 2020 (C) By Mohammad Amin Mollazadeh
 
 #pragma once
-
-typedef unsigned char cell;

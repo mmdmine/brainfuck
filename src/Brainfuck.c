@@ -5,13 +5,10 @@
 #include<stdio.h>
 #include<string.h>
 #include<errno.h>
-#include<limits.h>
 
 #include "Brainfuck.h"
-
-cell memory[256];
-char* ip;
-cell* ptr;
+#include "vm.h"
+#include "parser.h"
 
 char* read_file(char* file_path)
 {
@@ -45,100 +42,14 @@ char* read_file(char* file_path)
 	return buffer;
 }
 
-char* interpret()
-{
-	while (*ip != 0)
-	{
-		switch (*ip)
-		{
-		case '>':
-			if (ptr < memory+255)
-			{
-				++ptr;
-			}
-			else
-			{
-				printf("Out of cells.\n");
-				exit(1);
-			}
-			break;
-		case '<':
-			if (ptr > memory)
-			{
-				--ptr;
-			}
-			else
-			{
-				printf("Out of cells.\n");
-				exit(1);
-			}
-			break;
-		case '+':
-			if (*ptr < UCHAR_MAX)
-			{
-				(*ptr)++;
-			}
-			else
-			{
-				printf("Cell reached maximum.\n");
-				exit(1);
-			}
-			break;
-		case '-':
-			if (*ptr > 0)
-			{
-				(*ptr)--;
-			}
-			else
-			{
-				printf("Cell reached minimum.\n");
-				exit(1);
-			}
-			break;
-		case '.':
-			putc(*ptr, stdout);
-			break;
-		case ',':
-			*ptr = (cell)getc(stdin);
-			break;
-		case '[':
-			ip++;
-			char *loop_start = ip;
-			while(*ptr)
-			{
-				ip = loop_start;
-				interpret();
-			}
-			while (*ip != ']')
-			{
-				ip++;
-				if (*ip == 0)
-				{
-					printf("Unexpected end of program.\n");
-					exit(1);
-				}
-			}
-			break;
-		case ']':
-			return ip;
-		default:
-			// ignore
-			break;
-		}
-		ip++;
-	}
-	return ip;
-}
-
 int main(const int argc, char** args)
 {
 	if (argc > 1)
 	{
-		char* program = read_file(args[1]);
-		ip = program;
-		ptr = memory;
-		interpret();
-		free(program);
+		char* input = read_file(args[1]);
+		program input_program = parse(input);
+		run(input_program);
+		free(input);
 		return 0;
 	}
 
