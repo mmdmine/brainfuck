@@ -10,6 +10,10 @@ typedef struct {
     char *raw;
 } program;
 
+typedef struct {
+    cell *memory_pointer;
+} machine_state;
+
 // Run a program
 void run(program program);
 

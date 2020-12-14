@@ -10,8 +10,10 @@
 #include "madlib.h"
 
 cell memory[256];
+
 char* ip;
-cell* ptr;
+
+machine_state state;
 
 char* interpret()
 {
@@ -20,9 +22,9 @@ char* interpret()
         switch (*ip)
         {
             case '>':
-                if (ptr < memory+255)
+                if (state.memory_pointer < memory+255)
                 {
-                    ++ptr;
+                    ++(state.memory_pointer);
                 }
                 else
                 {
@@ -32,9 +34,9 @@ char* interpret()
                 }
                 break;
             case '<':
-                if (ptr > memory)
+                if (state.memory_pointer > memory)
                 {
-                    --ptr;
+                    --(state.memory_pointer);
                 }
                 else
                 {
@@ -44,9 +46,9 @@ char* interpret()
                 }
                 break;
             case '+':
-                if (*ptr < UCHAR_MAX)
+                if (*(state.memory_pointer) < UCHAR_MAX)
                 {
-                    (*ptr)++;
+                    (*(state.memory_pointer))++;
                 }
                 else
                 {
@@ -55,9 +57,9 @@ char* interpret()
                 }
                 break;
             case '-':
-                if (*ptr > 0)
+                if (*(state.memory_pointer) > 0)
                 {
-                    (*ptr)--;
+                    (*(state.memory_pointer))--;
                 }
                 else
                 {
@@ -66,15 +68,15 @@ char* interpret()
                 }
                 break;
             case '.':
-                put(*ptr);
+                put(*(state.memory_pointer));
                 break;
             case ',':
-                *ptr = get();
+                *(state.memory_pointer) = get();
                 break;
             case '[':
                 ip++;
                 char *loop_start = ip;
-                while(*ptr)
+                while(*(state.memory_pointer))
                 {
                     ip = loop_start;
                     interpret();
@@ -102,6 +104,6 @@ char* interpret()
 
 void run(program program) {
     ip = program.raw;
-    ptr = memory;
+    state.memory_pointer = memory;
     interpret();
 }
