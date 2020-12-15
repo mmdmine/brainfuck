@@ -1,6 +1,6 @@
 // Mad Brainfuck Interpreter
 // Copyright (C) 2020 Mohammad Amin Mollazadeh
-// vm.h: Virtual Machine Functions and Types
+// vm.h: MadBf Virtual Machine
 
 #pragma once
 

@@ -1,3 +1,5 @@
+// Simple String-Pointer Dictionary Implementation
+
 #pragma once
 
 typedef struct dictionary * dictionary;

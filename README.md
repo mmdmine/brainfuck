@@ -1,12 +1,16 @@
+# MadBf
+MadBf is an interpreter (also jit compiler) for
+Mad Brainfuck language. It's Brainfuck with some extensions.
+MadBf is compatible with original Brainfuck while extends it.
 
-# Brainfuck
-Simple brainfuck language interpreter
+# Details
+This will change in feature.
 
-# Implentation
 Cell size: 1 byte
 
 Cell count: 256
 
+Operations:
 ```
 Symbol | Action
 -------|------------------------

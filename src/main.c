@@ -18,7 +18,7 @@ int main(int argc, char **args) {
 
     // Initialize virtual machine
     vm_init();
-    register_library();
+    madlib_register();
     // TODO: register external libraries, if any
 
     run(program_parsed);

@@ -1,6 +1,6 @@
 // Mad Brainfuck Interpreter
 // Copyright (C) 2020 By Mohammad Amin Mollazadeh
-// token.h: Tokenizer types and functions
+// token.h: MadBf Tokenizer
 
 #pragma once
 

@@ -1,11 +1,12 @@
-// Mad Brainfuck Standard Library
+// Mad Brainfuck Interpreter
 // Copyright (C) 2020 Mohammad Amin Mollazadeh
+// madlib.c: MadBf Standard Library
 
 #include <stdio.h>
 
 #include "madlib.h"
 
-void register_library() {
+void madlib_register() {
     register_function("put", put);
     register_function("get", get);
 }

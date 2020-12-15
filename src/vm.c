@@ -1,6 +1,6 @@
 // Mad Brainfuck Interpreter
 // Copyright (C) 2020 Mohammad Amin Mollazadeh
-// vm.c: Virtual Machine Implementation
+// vm.c: MadBf's VM and Interpreter
 
 #include<stdlib.h>
 #include<stdio.h>

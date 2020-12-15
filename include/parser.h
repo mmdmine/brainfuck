@@ -1,6 +1,6 @@
 // Mad Brainfuck Interpreter
 // Copyright (C) 2020 Mohammad Amin Mollazadeh
-// parser.h: Parser functions and types
+// parser.h: MadBf Parser
 
 #pragma once
 
