@@ -44,3 +44,44 @@ token_node_p token_push(token_node_p self, token_node_p second) {
     second->next = self;
     return second;
 }
+
+token_node_p tokenize(char *input) {
+    char *ip = input;
+    token_node_p result = NULL;
+    token_node_p new_child = NULL;
+    while (*ip != 0) {
+        switch (*ip) {
+            case '>':
+                new_child = token_new(token_pointer_next);
+                break;
+            case '<':
+                new_child = token_new(token_pointer_prev);
+                break;
+            case '+':
+                new_child = token_new(token_increment);
+                break;
+            case '-':
+                new_child = token_new(token_decrement);
+                break;
+            case '[':
+                new_child = token_new(token_start_loop);
+                break;
+            case ']':
+                new_child = token_new(token_end_loop);
+                break;
+            case '.':
+                new_child = token_new(token_print);
+                break;
+            case ',':
+                new_child = token_new(token_read);
+                break;
+            default:
+                // ignore character
+                ip++;
+                continue;
+        }
+        result = token_push(result, new_child);
+        ip++;
+    }
+    return result;
+}

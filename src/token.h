@@ -25,3 +25,5 @@ struct token_node {
 token_node_p token_new();
 void token_free(token_node_p self);
 token_node_p token_push(token_node_p self, token_node_p second);
+
+token_node_p tokenize(char *input);
