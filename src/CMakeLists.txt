@@ -17,7 +17,7 @@ target_link_libraries(libstdmad libmadbf)
 
 add_executable(
         madbf
-        "Brainfuck.c"
+        "main.c"
 )
 
 target_link_libraries(madbf libmadbf libstdmad)
