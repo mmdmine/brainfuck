@@ -1,0 +1,9 @@
+add_executable(
+        madbf
+        "dictionary.c"
+        "token.c"
+        "parser.c"
+        "madlib.c"
+        "vm.c"
+        "Brainfuck.c"
+)
