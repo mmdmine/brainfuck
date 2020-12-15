@@ -45,8 +45,8 @@ token_node_p token_push(token_node_p self, token_node_p second) {
     return second;
 }
 
-token_node_p tokenize(char *input) {
-    char *ip = input;
+token_node_p tokenize(const char *input) {
+    const char *ip = input;
     token_node_p result = NULL;
     token_node_p new_child = NULL;
     while (*ip != 0) {

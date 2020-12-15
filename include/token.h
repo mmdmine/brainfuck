@@ -22,8 +22,8 @@ struct token_node {
     token_node_p next;
 };
 
-token_node_p token_new();
+token_node_p token_new(token_enum token_type);
 void token_free(token_node_p self);
 token_node_p token_push(token_node_p self, token_node_p second);
 
-token_node_p tokenize(char *input);
+token_node_p tokenize(const char *input);
