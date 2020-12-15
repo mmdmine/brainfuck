@@ -1,3 +1,5 @@
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
+
 add_library(
         libmadbf
         "dictionary.c"
