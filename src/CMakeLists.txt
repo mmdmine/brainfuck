@@ -1,9 +1,21 @@
-add_executable(
-        madbf
+add_library(
+        libmadbf
         "dictionary.c"
         "token.c"
         "parser.c"
-        "madlib.c"
         "vm.c"
+)
+
+add_library(
+        libstdmad
+        "madlib.c"
+)
+
+target_link_libraries(libstdmad libmadbf)
+
+add_executable(
+        madbf
         "Brainfuck.c"
 )
+
+target_link_libraries(madbf libmadbf libstdmad)
