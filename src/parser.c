@@ -6,7 +6,7 @@
 #include "token.h"
 
 program parse(char *input) {
-    token_node_p tokens = tokenize(input);
+    token_vector_t *tokens = tokenize(input);
 
     // TODO: Parse tokens
 

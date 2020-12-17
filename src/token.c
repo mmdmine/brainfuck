@@ -6,81 +6,68 @@
 
 #include "token.h"
 
-token_node_p token_new(token_enum token_type) {
-    token_node_p result = malloc(sizeof(struct token_node));
-    result->token = token_type;
-    result->next = NULL;
+token_vector_t *token_vector_new(size_t initial_size) {
+    token_vector_t *result = malloc(sizeof(token_vector_t));
+    result->tokens = calloc(initial_size, sizeof(token_t));
+    result->size = initial_size;
+    result->count = 0;
     return result;
 }
 
-void token_free(token_node_p self) {
-    token_node_p current, next;
-    current = self;
-    next = NULL;
-
-    while (current != NULL) {
-        if (current->next != NULL) {
-            next = current->next;
-        }
-
-        free(current);
-
-        current = next;
-        next = NULL;
-    }
+void token_vector_free(token_vector_t *self) {
+    free(self->tokens);
+    free(self);
 }
 
-token_node_p token_push(token_node_p self, token_node_p second) {
-    if (second == NULL && self == NULL) {
-        return NULL;
-    }
-    if (self == NULL) {
-        return second;
-    }
-    if (second == NULL || second->next != NULL) {
-        // TODO: error
-        return self;
-    }
-    second->next = self;
-    return second;
+void token_vector_grow(token_vector_t *self, size_t count) {
+    size_t new_size = self->size + count;
+    size_t total_bytes = new_size * sizeof(token_t);
+    self->tokens = realloc(self->tokens, total_bytes);
+    self->size = new_size;
 }
 
-token_node_p tokenize(const char *input) {
+size_t token_vector_append(token_vector_t *self, token_t token) {
+    if (self->count >= self->size) {
+        token_vector_grow(self, TOKEN_VECTOR_GROW_SIZE);
+    }
+    self->tokens[self->count] = token;
+    return self->count++;
+}
+
+token_vector_t *tokenize(const char *input) {
     const char *ip = input;
-    token_node_p result = NULL;
-    token_node_p new_child = NULL;
+    token_vector_t *result = token_vector_new(TOKEN_VECTOR_GROW_SIZE);
     while (*ip != 0) {
         switch (*ip) {
             case '>':
-                new_child = token_new(token_pointer_next);
+                token_vector_append(result, token_pointer_next);
                 break;
             case '<':
-                new_child = token_new(token_pointer_prev);
+                token_vector_append(result, token_pointer_prev);
                 break;
             case '+':
-                new_child = token_new(token_increment);
+                token_vector_append(result, token_increment);
                 break;
             case '-':
-                new_child = token_new(token_decrement);
+                token_vector_append(result, token_decrement);
                 break;
             case '[':
-                new_child = token_new(token_start_loop);
+                token_vector_append(result, token_start_loop);
                 break;
             case ']':
-                new_child = token_new(token_end_loop);
+                token_vector_append(result, token_end_loop);
                 break;
             case '.':
-                new_child = token_new(token_print);
+                token_vector_append(result, token_print);
                 break;
             case ',':
-                new_child = token_new(token_read);
+                token_vector_append(result, token_read);
                 break;
             default:
                 // ignore character
                 ip++;
                 continue;
         }
-        result = token_push(result, new_child);
         ip++;
     }
     return result;

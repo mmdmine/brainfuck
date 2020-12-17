@@ -4,7 +4,7 @@
 
 const char *test_program = "++[>+<-],.";
 
-const token_enum test_program_tokens[] = {
+const token_t test_program_tokens[] = {
         token_increment,
         token_increment,
         token_start_loop,
@@ -18,18 +18,13 @@ const token_enum test_program_tokens[] = {
 };
 
 int main(int argc, char **args) {
-    token_node_p tokens = tokenize(test_program);
+    token_vector_t *tokens = tokenize(test_program);
 
-    // iterate over tokens and compare them with expected value
-    int i = (sizeof(test_program_tokens) / sizeof(token_enum));
-    token_node_p current = tokens;
-    while (current != NULL) {
-        token_enum expected = test_program_tokens[--i];
-        assert(current->token == expected);
-        current = current->next;
+    for (int i = 0; i < tokens->count; i++) {
+        assert(tokens->tokens[i] == test_program_tokens[i]);
     }
 
-    token_free(tokens);
+    token_vector_free(tokens);
 
     return 0;
 }
