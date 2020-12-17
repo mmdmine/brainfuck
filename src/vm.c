@@ -1,6 +1,6 @@
 // Mad Brainfuck Interpreter
 // Copyright (C) 2020 Mohammad Amin Mollazadeh
-// vm.c: MadBf's VM and Interpreter
+// vm.c: Mad Brainfuck's VM and Interpreter
 
 #include<stdlib.h>
 #include<stdio.h>
@@ -9,7 +9,7 @@
 #include "vm.h"
 #include "dictionary.h"
 
-cell memory[256];
+cell memory[MEMORY_SIZE];
 
 char* ip;
 
@@ -36,6 +36,83 @@ void call_function(char *function_name) {
         return;
     }
     (*func)(&state);
+}
+
+void vm_execute(function_p function) {
+    // TODO: implement jit compiler
+    state.program_position = 0;
+    state.program_pointer = function;
+
+    while (state.program_position < state.program_pointer->count) {
+        opcode_t *current_opcode = &state.program_pointer->opcodes[state.program_position];
+        switch (current_opcode->type) {
+            case opcode_type_increment:
+                if (*state.memory_pointer < UCHAR_MAX)
+                {
+                    (*(state.memory_pointer))++;
+                }
+                else
+                {
+                    // TODO: Set error flag and return
+                    printf("Cell value reached maximum.\n");
+                    return;
+                }
+                break;
+            case opcode_type_decrement:
+                if (*state.memory_pointer > 0)
+                {
+                    (*(state.memory_pointer))--;
+                }
+                else
+                {
+                    // TODO: Set error flag and return
+                    printf("Cell value reached minimum.\n");
+                    return;
+                }
+                break;
+            case opcode_type_move_next:
+                if (state.memory_pointer < memory + MEMORY_SIZE)
+                {
+                    (state.memory_pointer)++;
+                }
+                else
+                {
+                    // TODO: Set error flag and return
+                    printf("Out of cells.\n");
+                    return;
+                }
+                break;
+            case opcode_type_move_prev:
+                if (state.memory_pointer > memory)
+                {
+                    (state.memory_pointer)--;
+                }
+                else
+                {
+                    // TODO: Set error flag and return
+                    printf("Out of cells.\n");
+                    return;
+                }
+                break;
+            case opcode_type_calli:
+                call_function(current_opcode->data.calli_data);
+                break;
+            case opcode_type_jump:
+                if (*state.memory_pointer != 0) {
+                    state.program_position = current_opcode->data.jump_data;
+                }
+                break;
+            default:
+                // TODO: Set error flag and return
+                printf("Invalid Opcode.\n");
+                return;
+        }
+
+        // if program_pointer is not changed, then move program_pointer to next
+        if (&state.program_pointer->opcodes[state.program_position] == current_opcode) {
+            state.program_position++;
+        }
+    }
 }
 
 char* interpret()

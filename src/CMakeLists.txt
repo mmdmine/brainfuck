@@ -6,6 +6,7 @@ add_library(
         "token.c"
         "parser.c"
         "vm.c"
+        "program.c"
 )
 
 add_library(
