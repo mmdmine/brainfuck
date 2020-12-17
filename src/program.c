@@ -28,8 +28,10 @@ void function_free(function_p self) {
 }
 
 void function_grow(function_p self, size_t count) {
-    self->count += count;
-    realloc(self->opcodes, self->count*sizeof(opcode_t));
+    size_t new_size = self->size + count;
+    size_t total_bytes = new_size * sizeof(opcode_t);
+    self->opcodes = realloc(self->opcodes, total_bytes);
+    self->size = new_size;
 }
 
 size_t function_omit(function_p self, opcode_t opcode) {
