@@ -50,6 +50,8 @@ int main(int argc, char **args) {
 
     parse_tokens(tokens, test_function);
 
+    token_vector_free(tokens);
+
     // test for function body
     size_t jump_i = 0; // jump_data index
     size_t calli_i = 0; // calli_data index
@@ -68,6 +70,8 @@ int main(int argc, char **args) {
             calli_i++;
         }
     }
+
+    function_free(test_function);
 
     return 0;
 }
