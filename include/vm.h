@@ -25,7 +25,7 @@ void vm_free();
 void vm_execute(function_p function);
 
 // Run a program
-void run(program program);
+void run(program_t *program);
 
 // Register a function
 void register_function(char * function_name, void * function_address);

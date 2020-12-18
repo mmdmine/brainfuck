@@ -12,7 +12,7 @@ int main(int argc, char **args) {
 
     char *program_raw = "+[-[<<[+[--->]-[<<<]]]>>>-]>-.---.>..>.<<<<-.<+.>>>>>.>.<<.<-.";
 
-    program program_parsed = parse(program_raw);
+    program_t *program_parsed = parse(program_raw);
 
     // TODO: free resources used by program_raw
 

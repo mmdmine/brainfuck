@@ -7,6 +7,19 @@
 
 #include "program.h"
 
+program_t *program_new() {
+    program_t *result = malloc(sizeof(program_t));
+    result->main = NULL;
+    return result;
+}
+
+void program_free(program_t *self) {
+    if (self->main != NULL) {
+        free(self->main);
+    }
+    free(self);
+}
+
 function_p function_new(size_t initial_size) {
     function_p result = malloc(sizeof(struct function));
     if (initial_size != 0) {

@@ -6,15 +6,15 @@
 
 #include "madlib.h"
 
-void madlib_register() {
-    register_function("put", put);
-    register_function("get", get);
-}
-
 void put(machine_state *state) {
     putchar(*(state->memory_pointer));
 }
 
 void get(machine_state *state) {
     *(state->memory_pointer) = getchar();
+}
+
+void madlib_register() {
+    register_function(MADLIB_FUNCTION_PUT, put);
+    register_function(MADLIB_FUNCTION_GET, get);
 }

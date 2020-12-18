@@ -202,7 +202,7 @@ char* interpret()
     return ip;
 }
 
-void run(program program) {
-    ip = program.raw;
+void run(program_t *program) {
+    ip = program->raw;
     interpret();
 }

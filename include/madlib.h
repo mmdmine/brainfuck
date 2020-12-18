@@ -6,11 +6,8 @@
 
 #include "vm.h"
 
+#define MADLIB_FUNCTION_PUT "put"
+#define MADLIB_FUNCTION_GET "get"
+
 // Register library functions
 void madlib_register();
-
-// Print cell to standard output
-void put(machine_state *state);
-
-// Get one cell from standard input
-void get(machine_state *state);
