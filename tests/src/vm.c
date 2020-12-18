@@ -1,13 +1,21 @@
+// test if virtual machine works correctly
+
 #include <assert.h>
+
 #include "program.h"
 #include "vm.h"
 
+// machine state at the end of program
 machine_state *vm_state = NULL;
 
+// native function test
+#define TEST_FUNCTION_TEST_CALLI "test"
 void test_calli(machine_state *state) {
-    *(state->memory_pointer) = 'A';
+    state->memory[state->memory_position] = 'A';
 }
 
+// save machine state
+#define TEST_FUNCTION_SAVE_STATE "save"
 void save_state(machine_state *state) {
     vm_state = state;
 }
@@ -15,14 +23,17 @@ void save_state(machine_state *state) {
 int main(int argc, char **args) {
     vm_init();
 
-    vm_register_native_function("test", test_calli);
-    vm_register_native_function("save_state", save_state);
+    // register native functions used by test
+    vm_register_native_function(TEST_FUNCTION_TEST_CALLI, test_calli);
+    vm_register_native_function(TEST_FUNCTION_SAVE_STATE, save_state);
 
     // test_function: + > : > ++ [ > + < - ] < < :
+
     function_t *test_function = function_new(14);
+
     function_omit_increment(test_function);
     function_omit_move_next(test_function);
-    function_omit_calli(test_function, "test");
+    function_omit_calli(test_function, TEST_FUNCTION_TEST_CALLI);
     function_omit_move_next(test_function);
     function_omit_increment(test_function);
     function_omit_increment(test_function);
@@ -33,20 +44,25 @@ int main(int argc, char **args) {
     function_omit_jump(test_function, loop_start);
     function_omit_move_prev(test_function);
     function_omit_move_prev(test_function);
-    function_omit_calli(test_function, "save_state");
+    function_omit_calli(test_function, TEST_FUNCTION_SAVE_STATE);
 
     vm_execute(test_function);
 
+    // test if vm state is saved
     assert(vm_state != NULL);
+    // test if program executed until the end
+    assert(vm_state->function_position == test_function->count);
+    // test if memory pointer is pointing first cell
+    assert(vm_state->memory_position == 0);
     // expected state:
     //  [0]: 1
     //  [1]: 'A'
     //  [2]: 0
     //  [3]: 2
-    assert(vm_state->memory_pointer[0] == 1);
-    assert(vm_state->memory_pointer[1] == 'A');
-    assert(vm_state->memory_pointer[2] == 0);
-    assert(vm_state->memory_pointer[3] == 2);
+    assert(vm_state->memory[0] == 1);
+    assert(vm_state->memory[1] == 'A');
+    assert(vm_state->memory[2] == 0);
+    assert(vm_state->memory[3] == 2);
 
     function_free(test_function);
     vm_free();

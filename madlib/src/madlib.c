@@ -1,17 +1,19 @@
 // Mad Brainfuck Interpreter
-// Copyright (C) 2020 Mohammad Amin Mollazadeh
-// madlib.c: MadBf Standard Library
+// By @the_madamin
+
+// madlib.c: Standard Library Implementation for Mad Brainfuck
 
 #include <stdio.h>
 
 #include "madlib.h"
+#include "vm.h"
 
 void put(machine_state *state) {
-    putchar(*(state->memory_pointer));
+    putchar(state->memory[state->memory_position]);
 }
 
 void get(machine_state *state) {
-    *(state->memory_pointer) = getchar();
+    state->memory[state->memory_position] = getchar();
 }
 
 void madlib_register() {

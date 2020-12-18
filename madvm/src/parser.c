@@ -1,20 +1,52 @@
 // Mad Brainfuck Interpreter
-// Copyright (C) 2020 Mohammad Amin Mollazadeh
-// parser.h: Parse input string to program
+// By @the_madamin
+
+// parser.h: Parse tokens and omit opcodes to functions
 
 #include <stdlib.h>
 
 #include "parser.h"
 #include "madlib.h"
 
+// Stack Frame vector
+//
+
+// Initial size of loop stack vector
 #define STACK_INITIAL_SIZE 256
+// Count of new entries to be allocated when vector needs to grow
 #define STACK_GROW_SIZE 4
 
+struct {
+    size_t * values;
+    size_t count;
+    size_t size;
+} stack_frame;
+
+void push_to_stack(size_t value) {
+    if (stack_frame.count >= stack_frame.size) {
+        size_t new_size = stack_frame.size + STACK_GROW_SIZE;
+        size_t total_bytes = new_size * sizeof(size_t);
+        stack_frame.values = realloc(stack_frame.values, total_bytes);
+        stack_frame.size = new_size;
+    }
+    stack_frame.values[stack_frame.count++] = value;
+}
+
+size_t pop_from_stack() {
+    if (stack_frame.count > 0) {
+        return stack_frame.values[--stack_frame.count];
+    }
+    else {
+        // TODO: Error
+        abort();
+    }
+}
+
 void parse_tokens(token_vector_t *tokens, function_t *function) {
-    // stack vector to keep track of loops
-    size_t * loop_stack = calloc(STACK_INITIAL_SIZE, sizeof(size_t));
-    size_t loop_stack_size = STACK_INITIAL_SIZE;
-    size_t loop_stack_count = 0;
+    // Initialize stack
+    stack_frame.values = calloc(STACK_INITIAL_SIZE, sizeof(size_t));
+    stack_frame.size = STACK_INITIAL_SIZE;
+    stack_frame.count = 0;
 
     for (size_t i = 0; i < tokens->count; i++) {
         switch (tokens->tokens[i]) {
@@ -30,36 +62,25 @@ void parse_tokens(token_vector_t *tokens, function_t *function) {
             case token_decrement:
                 function_omit_decrement(function);
                 break;
-            case token_start_loop:
-                if (loop_stack_count >= loop_stack_size) {
-                    size_t new_size = loop_stack_size + STACK_GROW_SIZE;
-                    size_t total_bytes = new_size * sizeof(size_t);
-                    loop_stack = realloc(loop_stack, total_bytes);
-                    loop_stack_size = new_size;
-                }
-                loop_stack[loop_stack_count++] = function->count;
+            case token_open_bracket:
+                push_to_stack(function->count);
                 break;
-            case token_end_loop:
-                if (loop_stack_count > 0) {
-                    function_omit_jump(function, loop_stack[--loop_stack_count]);
-                }
-                else {
-                    // TODO: Error
-                    abort();
-                }
+            case token_close_bracket:
+                function_omit_jump(function, pop_from_stack());
                 break;
-            case token_print:
+            case token_put_char:
                 function_omit_calli(function, MADLIB_FUNCTION_PUT);
                 break;
-            case token_read:
+            case token_get_char:
                 function_omit_calli(function, MADLIB_FUNCTION_GET);
                 break;
         }
     }
 
-    free(loop_stack);
+    free(stack_frame.values);
 
-    if (loop_stack_count > 0) {
+    // One or more ']' are missing
+    if (stack_frame.count > 0) {
         // TODO: Error
         abort();
     }

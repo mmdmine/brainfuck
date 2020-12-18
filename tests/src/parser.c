@@ -1,22 +1,27 @@
+// Test if parser works correctly
+
 #include <assert.h>
 #include <string.h>
 
 #include "parser.h"
 #include "madlib.h"
 
+
+// input for test
 const token_t test_program_tokens[] = {
         token_increment,
         token_increment,
-        token_start_loop,
+        token_open_bracket,
         token_pointer_next,
         token_increment,
         token_pointer_prev,
         token_decrement,
-        token_end_loop,
-        token_read,
-        token_print
+        token_close_bracket,
+        token_get_char,
+        token_put_char
 };
 
+// expected output
 const opcode_type_t test_program_opcodes[] = {
         opcode_type_increment,
         opcode_type_increment,
@@ -24,15 +29,17 @@ const opcode_type_t test_program_opcodes[] = {
         opcode_type_increment,
         opcode_type_move_prev,
         opcode_type_decrement,
-        opcode_type_jump,
+        opcode_type_ifjump,
         opcode_type_calli,
         opcode_type_calli
 };
 
+// expected values for jump_data
 const size_t jump_data[] = {
         2
 };
 
+// exptected values fro calli_data
 const char * calli_data[] = {
         MADLIB_FUNCTION_GET,
         MADLIB_FUNCTION_PUT
@@ -60,7 +67,7 @@ int main(int argc, char **args) {
         assert(test_function->opcodes[i].type == test_program_opcodes[i]);
 
         // test if jump_data is correct
-        if (test_function->opcodes[i].type == opcode_type_jump) {
+        if (test_function->opcodes[i].type == opcode_type_ifjump) {
             assert(test_function->opcodes[i].data.jump_data == jump_data[jump_i]);
             jump_i++;
         }

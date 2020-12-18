@@ -1,6 +1,7 @@
 // Mad Brainfuck Interpreter
-// Copyright (C) 2020 Mohammad Amin Mollazadeh
-// main.c: Interpreter's entry point
+// By @the_madamin
+
+// main.c: Entry point to load MadBf program and execute it
 
 #include "parser.h"
 #include "vm.h"
