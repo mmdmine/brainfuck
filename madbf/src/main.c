@@ -15,7 +15,8 @@ int main(int argc, char **args) {
 
     // compile program
     //
-    token_vector_t *tokens = tokenize(program_raw);
+    token_vector_t *tokens = token_vector_new(TOKEN_VECTOR_GROW_SIZE);
+    token_vector_stokenize(tokens, program_raw);
     // function size could be same as tokens count, or even less
     function_t * main_function = function_new(tokens->count);
     parse_tokens(tokens, main_function);

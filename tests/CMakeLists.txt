@@ -9,10 +9,6 @@ add_executable(token "src/token.c")
 target_link_libraries(token madvm)
 add_test(token token)
 
-add_executable(tokenizer "src/tokenizer.c")
-target_link_libraries(tokenizer madvm)
-add_test(tokenizer tokenizer)
-
 add_executable(opcode "src/opcode.c")
 target_link_libraries(opcode madvm)
 add_test(opcode opcode)

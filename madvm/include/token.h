@@ -51,9 +51,6 @@ size_t token_vector_append(token_vector_t *self, token_t token);
 // Tokenizer
 //
 
-// tokenize input string to tokens
-token_vector_t *tokenize(const char *input);
-
 // tokenize string to tokens
 void token_vector_stokenize(token_vector_t *self, const char *string);
 
