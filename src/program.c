@@ -20,8 +20,8 @@ void program_free(program_t *self) {
     free(self);
 }
 
-function_p function_new(size_t initial_size) {
-    function_p result = malloc(sizeof(struct function));
+function_t *function_new(size_t initial_size) {
+    function_t *result = malloc(sizeof(struct function));
     if (initial_size != 0) {
         result->opcodes = calloc(initial_size, sizeof(opcode_t));
     }
@@ -30,7 +30,7 @@ function_p function_new(size_t initial_size) {
     return result;
 }
 
-void function_free(function_p self) {
+void function_free(function_t *self) {
     for (size_t i = 0; i < self->count; i++) {
         if (self->opcodes[i].type == opcode_type_calli) {
             free(self->opcodes[i].data.calli_data);
@@ -40,14 +40,14 @@ void function_free(function_p self) {
     free(self);
 }
 
-void function_grow(function_p self, size_t count) {
+void function_grow(function_t *self, size_t count) {
     size_t new_size = self->size + count;
     size_t total_bytes = new_size * sizeof(opcode_t);
     self->opcodes = realloc(self->opcodes, total_bytes);
     self->size = new_size;
 }
 
-size_t function_omit(function_p self, opcode_t opcode) {
+size_t function_omit(function_t *self, opcode_t opcode) {
     if (self->count >= self->size) {
         function_grow(self, FUNCTION_GROW_STEP);
     }
@@ -55,7 +55,7 @@ size_t function_omit(function_p self, opcode_t opcode) {
     return self->count++;
 }
 
-#define FUNCTION_OMIT_IMPL(NAME,TYPE) size_t NAME(function_p self) {\
+#define FUNCTION_OMIT_IMPL(NAME,TYPE) size_t NAME(function_t *self) {\
     opcode_t opcode;\
     opcode.type = TYPE;\
     return function_omit(self, opcode);\
@@ -70,14 +70,14 @@ FUNCTION_OMIT_IMPL(function_omit_move_prev, opcode_type_move_prev)
 #define strdup _strdup
 #endif
 
-size_t function_omit_calli(function_p self, char * target) {
+size_t function_omit_calli(function_t *self, char * target) {
     opcode_t opcode;
     opcode.type = opcode_type_calli;
     opcode.data.calli_data = strdup(target);
     return function_omit(self, opcode);
 }
 
-size_t function_omit_jump(function_p self, size_t target) {
+size_t function_omit_jump(function_t *self, size_t target) {
     opcode_t opcode;
     opcode.type = opcode_type_jump;
     opcode.data.jump_data = target;

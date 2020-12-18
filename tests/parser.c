@@ -46,7 +46,7 @@ int main(int argc, char **args) {
     }
 
     // create new function
-    function_p test_function = function_new(sizeof(test_program_opcodes)/sizeof(opcode_type_t));
+    function_t *test_function = function_new(sizeof(test_program_opcodes)/sizeof(opcode_type_t));
 
     parse_tokens(tokens, test_function);
 

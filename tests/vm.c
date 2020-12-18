@@ -15,11 +15,11 @@ void save_state(machine_state *state) {
 int main(int argc, char **args) {
     vm_init();
 
-    register_function("test", test_calli);
-    register_function("save_state", save_state);
+    vm_register_native_function("test", test_calli);
+    vm_register_native_function("save_state", save_state);
 
     // test_function: + > : > ++ [ > + < - ] < < :
-    function_p test_function = function_new(14);
+    function_t *test_function = function_new(14);
     function_omit_increment(test_function);
     function_omit_move_next(test_function);
     function_omit_calli(test_function, "test");

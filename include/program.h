@@ -8,7 +8,7 @@
 
 #define FUNCTION_GROW_STEP 4
 
-typedef struct function * function_p;
+typedef struct function function_t;
 typedef struct opcode_base opcode_t;
 
 typedef enum {
@@ -40,9 +40,7 @@ struct function {
 };
 
 struct program {
-    function_p main; // TODO: add support for multiple functions
-
-    char *raw; // TODO: remove legacy parser
+    function_t *main; // TODO: add support for multiple functions
 };
 
 typedef struct program program_t;
@@ -50,16 +48,16 @@ typedef struct program program_t;
 program_t *program_new();
 void program_free(program_t *self);
 
-function_p function_new(size_t initial_size);
-void function_free(function_p self);
+function_t *function_new(size_t initial_size);
+void function_free(function_t *self);
 
 // omit opcode and return its index
-size_t function_omit(function_p self, opcode_t opcode);
+size_t function_omit(function_t *self, opcode_t opcode);
 
-size_t function_omit_increment(function_p self);
-size_t function_omit_decrement(function_p self);
-size_t function_omit_move_next(function_p self);
-size_t function_omit_move_prev(function_p self);
-size_t function_omit_jump(function_p self, size_t target);
+size_t function_omit_increment(function_t *self);
+size_t function_omit_decrement(function_t *self);
+size_t function_omit_move_next(function_t *self);
+size_t function_omit_move_prev(function_t *self);
+size_t function_omit_jump(function_t *self, size_t target);
 // target will be copied
-size_t function_omit_calli(function_p self, char * target);
+size_t function_omit_calli(function_t *self, char * target);

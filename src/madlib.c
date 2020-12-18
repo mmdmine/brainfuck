@@ -15,6 +15,6 @@ void get(machine_state *state) {
 }
 
 void madlib_register() {
-    register_function(MADLIB_FUNCTION_PUT, put);
-    register_function(MADLIB_FUNCTION_GET, get);
+    vm_register_native_function(MADLIB_FUNCTION_PUT, put);
+    vm_register_native_function(MADLIB_FUNCTION_GET, get);
 }

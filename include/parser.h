@@ -7,6 +7,4 @@
 #include "token.h"
 #include "program.h"
 
-void parse_tokens(token_vector_t *tokens, function_p function);
-
-program_t *parse(char *input);
+void parse_tokens(token_vector_t *tokens, function_t *function);

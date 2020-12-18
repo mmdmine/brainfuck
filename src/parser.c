@@ -10,7 +10,7 @@
 #define STACK_INITIAL_SIZE 256
 #define STACK_GROW_SIZE 4
 
-void parse_tokens(token_vector_t *tokens, function_p function) {
+void parse_tokens(token_vector_t *tokens, function_t *function) {
     // stack vector to keep track of loops
     size_t * loop_stack = calloc(STACK_INITIAL_SIZE, sizeof(size_t));
     size_t loop_stack_size = STACK_INITIAL_SIZE;
@@ -63,10 +63,4 @@ void parse_tokens(token_vector_t *tokens, function_p function) {
         // TODO: Error
         abort();
     }
-}
-
-program_t *parse(char *input) {
-    program_t * result = program_new();
-    result->raw = input;
-    return result;
 }

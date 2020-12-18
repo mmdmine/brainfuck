@@ -2,7 +2,6 @@
 // Copyright (C) 2020 Mohammad Amin Mollazadeh
 // vm.c: Mad Brainfuck's VM and Interpreter
 
-#include<stdlib.h>
 #include<stdio.h>
 #include<limits.h>
 
@@ -10,8 +9,6 @@
 #include "dictionary.h"
 
 cell memory[MEMORY_SIZE];
-
-char* ip;
 
 machine_state state;
 dictionary_t *native_functions;
@@ -25,11 +22,11 @@ void vm_free() {
     dictionary_free(native_functions);
 }
 
-void register_function(char *function_name, void *function_address) {
+void vm_register_native_function(char *function_name, void *function_address) {
     dictionary_append(native_functions, function_name, function_address);
 }
 
-void call_function(char *function_name) {
+void vm_run_native_function(char *function_name) {
     void (*func)(machine_state*) = dictionary_lookup(native_functions, function_name);
     if (func == NULL) {
         // TODO: error
@@ -38,7 +35,7 @@ void call_function(char *function_name) {
     (*func)(&state);
 }
 
-void vm_execute(function_p function) {
+void vm_execute(function_t *function) {
     // TODO: implement jit compiler
     state.program_position = 0;
     state.program_pointer = function;
@@ -54,7 +51,7 @@ void vm_execute(function_p function) {
                 else
                 {
                     // TODO: Set error flag and return
-                    printf("Cell value reached maximum.\n");
+                    printf("Cell reached to maximum value.\n");
                     return;
                 }
                 break;
@@ -66,7 +63,7 @@ void vm_execute(function_p function) {
                 else
                 {
                     // TODO: Set error flag and return
-                    printf("Cell value reached minimum.\n");
+                    printf("Cell reached to minimum value.\n");
                     return;
                 }
                 break;
@@ -78,7 +75,7 @@ void vm_execute(function_p function) {
                 else
                 {
                     // TODO: Set error flag and return
-                    printf("Out of cells.\n");
+                    printf("Cell pointer reached to end of memory.\n");
                     return;
                 }
                 break;
@@ -90,12 +87,12 @@ void vm_execute(function_p function) {
                 else
                 {
                     // TODO: Set error flag and return
-                    printf("Out of cells.\n");
+                    printf("Cell pointer reached to start of memory.\n");
                     return;
                 }
                 break;
             case opcode_type_calli:
-                call_function(current_opcode->data.calli_data);
+                vm_run_native_function(current_opcode->data.calli_data);
                 break;
             case opcode_type_jump:
                 if (*state.memory_pointer != 0) {
@@ -113,96 +110,4 @@ void vm_execute(function_p function) {
             state.program_position++;
         }
     }
-}
-
-char* interpret()
-{
-    while (*ip != 0)
-    {
-        switch (*ip)
-        {
-            case '>':
-                if (state.memory_pointer < memory+255)
-                {
-                    ++(state.memory_pointer);
-                }
-                else
-                {
-                    // TODO: Set error flag and return
-                    printf("Out of cells.\n");
-                    exit(1);
-                }
-                break;
-            case '<':
-                if (state.memory_pointer > memory)
-                {
-                    --(state.memory_pointer);
-                }
-                else
-                {
-                    // TODO: Set error flag and return
-                    printf("Out of cells.\n");
-                    exit(1);
-                }
-                break;
-            case '+':
-                if (*(state.memory_pointer) < UCHAR_MAX)
-                {
-                    (*(state.memory_pointer))++;
-                }
-                else
-                {
-                    printf("Cell reached maximum.\n");
-                    exit(1);
-                }
-                break;
-            case '-':
-                if (*(state.memory_pointer) > 0)
-                {
-                    (*(state.memory_pointer))--;
-                }
-                else
-                {
-                    printf("Cell reached minimum.\n");
-                    exit(1);
-                }
-                break;
-            case '.':
-                call_function("put");
-                break;
-            case ',':
-                call_function("get");
-                break;
-            case '[':
-                ip++;
-                char *loop_start = ip;
-                while(*(state.memory_pointer))
-                {
-                    ip = loop_start;
-                    interpret();
-                }
-                while (*ip != ']')
-                {
-                    ip++;
-                    if (*ip == 0)
-                    {
-                        printf("Unexpected end of program.\n");
-                        exit(1);
-                    }
-                }
-                break;
-            case ']':
-                return ip;
-            default:
-                // ignore
-                break;
-        }
-        ip++;
-    }
-    return ip;
-}
-
-void run(program_t *program) {
-    ip = program->raw;
-    interpret();
 }
