@@ -6,7 +6,6 @@
 #include "parser.h"
 #include "madlib.h"
 
-
 // input for test
 const token_t test_program_tokens[] = {
         token_increment,

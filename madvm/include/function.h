@@ -31,6 +31,8 @@ struct function {
 function_t *function_new(size_t initial_size);
 // free resources that's used by function
 void function_free(function_t *self);
+// grow size of opcodes vector
+void function_grow(function_t *self, size_t count);
 // omit a opcode to function and return its index
 // function grows by FUNCTION_GROW_SIZE automatically when it reaches to bounds
 size_t function_omit(function_t *self, opcode_t opcode);

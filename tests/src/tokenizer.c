@@ -5,7 +5,7 @@
 #include "token.h"
 
 // input value for test
-const char *test_program = "++[>+<-],.";
+const char *test_program = "++[>+<-],.:Y";
 
 // expected output
 const token_t test_program_tokens[] = {
@@ -18,7 +18,9 @@ const token_t test_program_tokens[] = {
         token_decrement,
         token_close_bracket,
         token_get_char,
-        token_put_char
+        token_put_char,
+        token_call,
+        token_fork
 };
 
 int main(int argc, char **args) {
