@@ -6,6 +6,7 @@
 #pragma once
 
 #include <stddef.h>
+#include <stdio.h>
 
 // Count of entries to be added to token vector when it reaches the bounds
 #define TOKEN_VECTOR_GROW_SIZE 4
@@ -52,3 +53,9 @@ size_t token_vector_append(token_vector_t *self, token_t token);
 
 // tokenize input string to tokens
 token_vector_t *tokenize(const char *input);
+
+// tokenize string to tokens
+void token_vector_stokenize(token_vector_t *self, const char *string);
+
+// read FILE and tokenize it
+void token_vector_ftokenize(token_vector_t *self, FILE* file);

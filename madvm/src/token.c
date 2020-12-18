@@ -84,15 +84,25 @@ void token_vector_append_char(token_vector_t *self, char c) {
 }
 
 token_vector_t *tokenize(const char *input) {
-    const char *ip = input;
-
     token_vector_t *result = token_vector_new(TOKEN_VECTOR_GROW_SIZE);
+    token_vector_stokenize(result, input);
+    return result;
+}
+
+void token_vector_stokenize(token_vector_t *self, const char *string) {
+    const char *ip = string;
 
     // iterate over string and get token for each char
     while (*ip != 0) {
-        token_vector_append_char(result, *ip);
+        token_vector_append_char(self, *ip);
         ip++;
     }
+}
 
-    return result;
+void token_vector_ftokenize(token_vector_t *self, FILE* file) {
+    int c;
+
+    while ((c = fgetc(file)) != EOF) {
+        token_vector_append_char(self, (char)c);
+    }
 }
