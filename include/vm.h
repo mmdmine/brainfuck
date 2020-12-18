@@ -28,4 +28,4 @@ void vm_execute(function_p function);
 void run(program program);
 
 // Register a function
-void register_function(const char *function_name, void *function_address);
+void register_function(char * function_name, void * function_address);

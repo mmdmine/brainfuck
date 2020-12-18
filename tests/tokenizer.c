@@ -20,7 +20,7 @@ const token_t test_program_tokens[] = {
 int main(int argc, char **args) {
     token_vector_t *tokens = tokenize(test_program);
 
-    for (int i = 0; i < tokens->count; i++) {
+    for (size_t i = 0; i < tokens->count; i++) {
         assert(tokens->tokens[i] == test_program_tokens[i]);
     }
 

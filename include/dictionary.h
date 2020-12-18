@@ -6,7 +6,7 @@
 
 #define DICTIONARY_GROW_SIZE 4
 
-typedef const char * dictionary_key;
+typedef char * dictionary_key;
 
 typedef struct dictionary {
     dictionary_key *keys;

@@ -341,3 +341,4 @@ healthchecksdb
 
 # cmake ignore
 out/
+cmake-build-debug*/

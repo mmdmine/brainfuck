@@ -18,7 +18,7 @@ function_p function_new(size_t initial_size) {
 }
 
 void function_free(function_p self) {
-    for (int i = 0; i < self->count; i++) {
+    for (size_t i = 0; i < self->count; i++) {
         if (self->opcodes[i].type == opcode_type_calli) {
             free(self->opcodes[i].data.calli_data);
         }
@@ -52,6 +52,10 @@ FUNCTION_OMIT_IMPL(function_omit_increment, opcode_type_increment)
 FUNCTION_OMIT_IMPL(function_omit_decrement, opcode_type_decrement)
 FUNCTION_OMIT_IMPL(function_omit_move_next, opcode_type_move_next)
 FUNCTION_OMIT_IMPL(function_omit_move_prev, opcode_type_move_prev)
+
+#ifdef WIN32
+#define strdup _strdup
+#endif
 
 size_t function_omit_calli(function_p self, char * target) {
     opcode_t opcode;

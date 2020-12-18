@@ -25,7 +25,7 @@ void vm_free() {
     dictionary_free(native_functions);
 }
 
-void register_function(const char *function_name, void *function_address) {
+void register_function(char *function_name, void *function_address) {
     dictionary_append(native_functions, function_name, function_address);
 }
 
