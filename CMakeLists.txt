@@ -6,9 +6,14 @@ project ("Brainfuck")
 
 include(CTest)
 
-include_directories(include)
+include_directories(
+        "madvm/include"
+        "madlib/include"
+)
 
-add_subdirectory(src)
+add_subdirectory(madvm)
+add_subdirectory(madlib)
+add_subdirectory(madbf)
 
 enable_testing()
 add_subdirectory(tests)
