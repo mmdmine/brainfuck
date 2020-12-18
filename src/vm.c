@@ -14,23 +14,23 @@ cell memory[MEMORY_SIZE];
 char* ip;
 
 machine_state state;
-dictionary functions_registry;
+dictionary_t *native_functions;
 
 void vm_init() {
     state.memory_pointer = memory;
-    functions_registry = dictionary_new(8); // TODO: use 8 for now
+    native_functions = dictionary_new(DICTIONARY_GROW_SIZE);
 }
 
 void vm_free() {
-    dictionary_free(functions_registry);
+    dictionary_free(native_functions);
 }
 
 void register_function(const char *function_name, void *function_address) {
-    dictionary_add(functions_registry, function_name, function_address);
+    dictionary_append(native_functions, function_name, function_address);
 }
 
 void call_function(char *function_name) {
-    void (*func)(machine_state*) = dictionary_lookup(functions_registry, function_name);
+    void (*func)(machine_state*) = dictionary_lookup(native_functions, function_name);
     if (func == NULL) {
         // TODO: error
         return;

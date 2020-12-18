@@ -3,47 +3,45 @@
 
 #include "dictionary.h"
 
-struct dictionary {
-    dictionary_key *keys;
-    void * *values;
-    size_t count;
-    size_t length;
-};
-
-dictionary dictionary_new(int length) {
-    dictionary result = malloc(sizeof(struct dictionary));
+dictionary_t *dictionary_new(size_t initial_size) {
+    dictionary_t *result = malloc(sizeof(dictionary_t));
+    result->keys = calloc(initial_size, sizeof(dictionary_key));
+    result->values = calloc(initial_size, sizeof(void *));
     result->count = 0;
-    result->length = length;
-    result->keys = calloc(length, sizeof(dictionary_key));
-    result->values = calloc(length, sizeof(void *));
+    result->size = initial_size;
     return result;
 }
 
-void dictionary_free(dictionary self) {
-    self->length = 0;
+void dictionary_free(dictionary_t *self) {
     free(self->keys);
     free(self->values);
     free(self);
 }
 
-void dictionary_add(dictionary self, dictionary_key key, void *value) {
-    if (self->count >= self->length) {
-        // TODO: error
-        return;
+size_t dictionary_append(dictionary_t *self, dictionary_key key, void *value) {
+    if (self->count >= self->size) {
+        dictionary_grow(self, DICTIONARY_GROW_SIZE);
     }
     self->keys[self->count] = key;
     self->values[self->count] = value;
-    self->count++;
+    return self->count++;
 }
 
-void *dictionary_lookup(dictionary self, char *key) {
-    size_t i = 0;
-    while (strcmp(self->keys[i], key) != 0) {
-        i++;
-        if (i >= self->length) {
-            // TODO: error
-            return NULL;
+void dictionary_grow(dictionary_t *self, size_t count) {
+    size_t new_size = self->size + count;
+    size_t total_key_bytes = new_size * sizeof(dictionary_key);
+    size_t total_value_bytes = new_size * sizeof(void *);
+    self->keys = realloc(self->keys, total_key_bytes);
+    self->values = realloc(self->values, total_value_bytes);
+    self->size = new_size;
+}
+
+void *dictionary_lookup(dictionary_t *self, char *key) {
+    for (size_t i = 0; i < self->count; i++) {
+        if (strcmp(self->keys[i], key) == 0) {
+            return self->values[i];
         }
     }
-    return self->values[i];
+    // TODO: Error
+    return NULL;
 }
